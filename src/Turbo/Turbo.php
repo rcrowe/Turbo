@@ -1,6 +1,6 @@
 <?php
 
-namespace rcrowe\Turbo;
+namespace Turbo;
 
 class Turbo
 {

@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-0": {
-            "rcrowe\\Turbo": "src/"
+            "Turbo": "src/"
         }
     }
 }

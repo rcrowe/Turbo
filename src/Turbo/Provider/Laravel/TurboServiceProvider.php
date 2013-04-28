@@ -1,9 +1,9 @@
 <?php
 
-namespace rcrowe\Turbo\Provider\Laravel;
+namespace Turbo\Provider\Laravel;
 
 use Illuminate\Support\ServiceProvider;
-use rcrowe\Turbo\Turbo;
+use Turbo\Turbo;
 
 class TurboServiceProvider extends ServiceProvider
 {
