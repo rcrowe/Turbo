@@ -25,7 +25,7 @@ Update your packages with `composer update` or install with `composer install`.
 Providers
 ---------
 
-Providers enable instant usage of Turbo within different frameworks, we currently provide the following intergrations:
+Providers enable instant usage of Turbo within different frameworks, we currently provide the following integrations:
 
 **Laravel**
 
@@ -35,7 +35,7 @@ PJAX
 ----
 
 To make this all work Turbo needs [PJAX](https://github.com/defunkt/jquery-pjax) to get and set the response.
-Just like Turbolinks we responsed with the whole body, not just a section of it. In order to support this, you need
+Just like Turbolinks we respond with the whole body, not just a section of it. In order to support this, you need
 to setup PJAX to use the `<body>` tag. A simple example of this would be:
 
 ```js
@@ -43,7 +43,7 @@ $(function() {
     $(document).pjax('.js-pjax', 'body');
 });
 ```
- 
+
 License
 -------
 
