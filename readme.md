@@ -27,17 +27,22 @@ Providers
 
 Providers enable instant usage of Turbo within different frameworks, we currently provide the following intergrations:
 
-*Laravel*
+**Laravel**
 
 Add `Turbo\Provider\Laravel\TurboServiceProvider` to `app/config/app.php` and your good to go
-
-
-Always happy to recieve pull requests with new providers.
 
 PJAX
 ----
 
+To make this all work Turbo needs [PJAX](https://github.com/defunkt/jquery-pjax) to get and set the response.
+Just like Turbolinks we responsed with the whole body, not just a section of it. In order to support this, you need
+to setup PJAX to use the `<body>` tag. A simple example of this would be:
 
+```js
+$(function() {
+    $(document).pjax('.js-pjax', 'body');
+});
+```
  
 License
 -------
