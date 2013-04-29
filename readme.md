@@ -29,7 +29,15 @@ Providers enable instant usage of Turbo within different frameworks, we currentl
 
 **Laravel**
 
-Add `Turbo\Provider\Laravel\TurboServiceProvider` to `app/config/app.php` and your good to go
+Add `Turbo\Provider\Laravel\TurboServiceProvider` to `app/config/app.php` and your good to go.
+
+The Laravel provider also registers a `turbo.pjax` event so that other parts of your app can listen for a pjax request. For example:
+
+```php
+\Event::listen('turbo.pjax', function($request, $response) {
+    $response->header('X-App-Msg', 'Hello world');
+});
+```
 
 PJAX
 ----
