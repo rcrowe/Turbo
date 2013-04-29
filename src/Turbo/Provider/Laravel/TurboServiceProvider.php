@@ -11,6 +11,7 @@ namespace Turbo\Provider\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use App;
+use Event;
 use Turbo\Turbo;
 
 /**
@@ -28,8 +29,11 @@ class TurboServiceProvider extends ServiceProvider
         App::after(function($request, $response) {
 
             $turbo = new Turbo($response->getOriginalContent()->render());
-
             $response->setContent($turbo->getResponse());
+
+            if ($turbo->isPjax()) {
+                Event::fire('turbo.pjax', array($request, $response));
+            }
         });
     }
 }
