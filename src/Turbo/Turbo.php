@@ -17,16 +17,10 @@ namespace Turbo;
 class Turbo
 {
     /**
-     * @var bool Is the current request being made by PJAX.
-     */
-    protected $isPjax = false;
-
-    /**
      * Create a new instance of Turbo.
      */
     public function __construct()
     {
-        $this->isPjax = (isset($_SERVER['HTTP_X_PJAX']) OR isset($_GET['_pjax']));
     }
 
     /**
@@ -34,7 +28,7 @@ class Turbo
      */
     public function isPjax()
     {
-        return $this->isPjax;
+        return (isset($_SERVER['HTTP_X_PJAX']) OR isset($_GET['_pjax']));
     }
 
     /**
