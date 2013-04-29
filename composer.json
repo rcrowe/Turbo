@@ -12,9 +12,6 @@
     "require": {
         "php": ">=5.3.0"
     },
-    "require": {
-        "phpunit/phpunit": "3.7.*"
-    },
     "autoload": {
         "psr-0": {
             "Turbo": "src/"
