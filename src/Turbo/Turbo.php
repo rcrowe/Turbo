@@ -17,68 +17,56 @@ namespace Turbo;
 class Turbo
 {
     /**
-     * @var string HTML response.
+     * @var bool Is the current request being made by PJAX.
      */
-    protected $response;
+    protected $isPjax = false;
 
     /**
-     * Create a new instance.
-     *
-     * @param string $response HTML.
+     * Create a new instance of Turbo.
      */
-    public function __construct($response)
+    public function __construct()
     {
-        $this->response = $response;
-
-        if (is_string($response) AND $this->isPjax()) {
-            $this->process();
-        }
+        $this->isPjax = (isset($_SERVER['HTTP_X_PJAX']) OR isset($_GET['_pjax']));
     }
 
     /**
-     * Get the response (May or may not have been processed).
-     *
-     * @return string
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Is this request being made by PJAX.
-     *
-     * @return bool
+     * Is this request a PJAX request?
      */
     public function isPjax()
     {
-        return (isset($_SERVER['HTTP_X_PJAX']) OR isset($_GET['_pjax']));
+        return $this->isPjax;
     }
 
     /**
-     * If PJAX request, extract HTML body.
+     * If PJAX request, extract HTML body. Any problems we just sent back the original content.
      *
-     * @return void
+     * @param string $content Original content you want to extract.
+     * @return string
      */
-    protected function process()
+    public function extract($content)
     {
+        // Send back the original content if we aren't supposed to be extracting
+        if (!is_string($content) OR !$this->isPjax()) {
+            return $content;
+        }
+
         // We only process if we find a valid <body>
-        preg_match('/(?:<body[^>]*>)(.*)<\/body>/isU', $this->response, $matches);
+        preg_match('/(?:<body[^>]*>)(.*)<\/body>/isU', $content, $matches);
 
         // Did we find the body
         if (count($matches) !== 2) {
-            return false;
+            return $content;
         }
 
         $body = $matches[1];
 
         // Does the page have a title
-        preg_match('@<title>([^<]+)</title>@', $this->response, $matches);
+        preg_match('@<title>([^<]+)</title>@', $content, $matches);
 
         // Did we find the title
         $title = (count($matches) === 2) ? $matches[0] : '';
 
-        // Set the new response
-        $this->response = $title.$body;
+        // Set new content
+        return $title.$body;
     }
 }

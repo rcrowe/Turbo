@@ -28,13 +28,22 @@ class TurboServiceProvider extends ServiceProvider
     {
         App::after(function($request, $response) {
 
-            if (is_a($response, 'Illuminate\Http\Response')) {
-                $turbo = new Turbo($response->getOriginalContent()->render());
-                $response->setContent($turbo->getResponse());
+            $turbo = new Turbo;
 
-                if ($turbo->isPjax()) {
-                    Event::fire('turbo.pjax', array($request, $response));
+            if ($turbo->isPjax()) {
+
+                if (is_a($response, 'Illuminate\Http\Response')) {
+
+                    // Extract the body from the response
+                    $content = $response->getOriginalContent()->render();
+                    $body    = $turbo->extract($content);
+
+                    // Set new response content
+                    $response->setContent($body);
                 }
+
+                // Fire that we are in a pjax request
+                Event::fire('turbo.pjax', array($request, $response));
             }
         });
     }
