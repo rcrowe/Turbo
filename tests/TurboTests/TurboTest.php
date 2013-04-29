@@ -4,114 +4,85 @@ namespace TurboTests;
 
 use PHPUnit_Framework_TestCase;
 use Turbo\Turbo;
-use ReflectionMethod;
 
 class TurboTest extends PHPUnit_Framework_TestCase
 {
-    public function testInstance()
+    public function setUp()
     {
-        $str   = 'This is an example';
-        $turbo = new Turbo($str);
-        $this->assertEquals($str, $turbo->getResponse());
+        $this->turbo = new Turbo;
+        $this->setIsPjax();
+    }
+
+    public function tearDown()
+    {
+        $this->removeIsPjax();
     }
 
     public function testIsPjax()
     {
-        $turbo = new Turbo('test');
-        $this->assertFalse($turbo->isPjax());
+        $this->assertTrue($this->turbo->isPjax());
+        $this->removeIsPjax();
+        $this->assertFalse($this->turbo->isPjax());
 
+        // Test different variables that effect isPjax
         $_SERVER['HTTP_X_PJAX'] = true;
-        $this->assertTrue($turbo->isPjax());
+        $this->assertTrue($this->turbo->isPjax());
         $this->removeIsPjax();
 
         $_GET['_pjax'] = true;
-        $this->assertTrue($turbo->isPjax());
+        $this->assertTrue($this->turbo->isPjax());
         $this->removeIsPjax();
+    }
 
-        $this->setIsPjax();
-        $this->assertTrue($turbo->isPjax());
-        $this->removeIsPjax();
+    public function testNotString()
+    {
+        foreach (array(null, 1234, new \stdClass, true) as $check) {
+            $this->assertEquals($check, $this->turbo->extract($check));
+        }
     }
 
     public function testNoBodyFound()
     {
-        $this->setIsPjax();
-
-        // no body
-        $method = new ReflectionMethod('Turbo\Turbo', 'process');
-        $method->setAccessible(true);
-
-        $turbo   = new Turbo('test');
-        $process = $method->invoke($turbo);
-
-        $this->assertFalse($process);
-
-        // opening tag
-        $method = new ReflectionMethod('Turbo\Turbo', 'process');
-        $method->setAccessible(true);
-
-        $turbo   = new Turbo('<body>test');
-        $process = $method->invoke($turbo);
-
-        $this->assertFalse($process);
-
-        // closing tag
-        $method = new ReflectionMethod('Turbo\Turbo', 'process');
-        $method->setAccessible(true);
-
-        $turbo   = new Turbo('test</body>');
-        $process = $method->invoke($turbo);
-
-        $this->assertFalse($process);
-
-        // Valid, no false returned
-        $method = new ReflectionMethod('Turbo\Turbo', 'process');
-        $method->setAccessible(true);
-
-        $turbo   = new Turbo('test</body>');
-        $process = $method->invoke($turbo);
-
-        $this->assertTrue(!$process);
+        foreach (array('test', '<body>test', 'test</body>') as $check) {
+            $this->assertEquals($check, $this->turbo->extract($check));
+        }
     }
 
     public function testBodyTagRemoved()
     {
-        $this->setIsPjax();
-        $str   = 'This is just a test';
-        $turbo = new Turbo('<body>'.$str.'</body>');
+        $str     = 'This is just a test';
+        $content = $this->turbo->extract('<body>'.$str.'</body>');
 
-        $response = $turbo->getResponse();
-        $this->assertEquals($str, $response);
-        $this->removeIsPjax();
+        $this->assertEquals($str, $content);
     }
 
     public function testNoTitleFound()
     {
         // opening tag
-        $this->setIsPjax();
-        $turbo = new Turbo('<title>Noodle<body>Test</body>');
-        $response = $turbo->getResponse();
-        $this->assertEquals('Test', $response);
+        $content = $this->turbo->extract('<title>Noodle<body>Test</body>');
+        $this->assertEquals('Test', $content);
 
         // closing tag
-        $this->setIsPjax();
-        $turbo = new Turbo('Noodle</title><body>Test</body>');
-        $response = $turbo->getResponse();
-        $this->assertEquals('Test', $response);
+        $content = $this->turbo->extract('Noodle</title><body>Test</body>');
+        $this->assertEquals('Test', $content);
     }
 
     public function testTitleFound()
     {
-        $this->setIsPjax();
         $html  = '<html>';
         $html .= '<head><title>Hello world</title></head>';
         $html .= '<body>Butter Bean</body>';
         $html .= '</html>';
 
-        $turbo = new Turbo($html);
-        $response = $turbo->getResponse();
+        $this->assertEquals('<title>Hello world</title>Butter Bean', $this->turbo->extract($html));
+    }
 
-        $this->assertEquals('<title>Hello world</title>Butter Bean', $response);
+    public function testIsNotPjaxExtract()
+    {
+        $this->removeIsPjax();
+        $str = '<body>test</body>';
+
+        $this->assertEquals($str, $this->turbo->extract($str));
     }
 
     public function setIsPjax()
