@@ -34,7 +34,7 @@ Add `Turbo\Provider\Laravel\TurboServiceProvider` to `app/config/app.php` and yo
 The Laravel provider also registers a `turbo.pjax` event so that other parts of your app can listen for a pjax request. For example:
 
 ```php
-\Event::listen('turbo.pjax', function($request, $response) {
+Event::listen('turbo.pjax', function($request, $response) {
     $response->header('X-App-Msg', 'Hello world');
 });
 ```
