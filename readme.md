@@ -15,7 +15,7 @@ Add `rcrowe\turbo` as a requirement to composer.json:
 ```javascript
 {
     "require": {
-        "rcrowe/turbo": "0.1.*"
+        "rcrowe/turbo": "0.2.*"
     }
 }
 ```
