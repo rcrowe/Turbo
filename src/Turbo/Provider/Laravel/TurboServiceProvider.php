@@ -35,7 +35,7 @@ class TurboServiceProvider extends ServiceProvider
                 if (is_a($response, 'Illuminate\Http\Response')) {
 
                     // Extract the body from the response
-                    $content = $response->getOriginalContent()->render();
+                    $content = (string)$response->getOriginalContent();
                     $body    = $turbo->extract($content);
 
                     // Set new response content
