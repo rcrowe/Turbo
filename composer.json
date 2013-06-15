@@ -1,7 +1,7 @@
 {
     "name": "rcrowe/turbo",
     "description": "Think turbolinks but for your PHP application. Powered by pjax.",
-    "keywords": ["pjax", "turbolinks", "laravel"],
+    "keywords": ["pjax", "turbolinks", "laravel", "fuelphp"],
     "license": "MIT",
     "authors": [
         {
