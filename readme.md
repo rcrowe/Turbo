@@ -39,6 +39,18 @@ Event::listen('turbo.pjax', function($request, $response) {
 });
 ```
 
+**Fuelphp**
+
+Add `class_alias('Turbo\\Provider\\Fuel\\Response', 'Response')` to the bottom of `fuel\app\bootstrap.php` and your good to go.
+
+Turbo also register a `turbo.pjax` event that you can listen for. For example:
+
+```php
+Event::register('turbo.pjax', function() {
+    echo 'This is a pjax request';
+});
+```
+
 PJAX
 ----
 
