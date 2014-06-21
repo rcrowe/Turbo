@@ -14,13 +14,18 @@ class TurboTest extends PHPUnit_Framework_TestCase
         m::close();
     }
 
-    public function testSetCrawler()
+    public function testSetCrawlerWithConstructor()
     {
         $crawler = m::mock('Symfony\Component\DomCrawler\Crawler');
         $crawler->shouldReceive('fooBar')->andReturn('bingBang');
 
         $turbo = new Turbo($crawler);
         $this->assertEquals('bingBang', $turbo->getCrawler()->fooBar());
+    }
+
+    public function testSetCrawler()
+    {
+        $turbo = new Turbo(new Crawler);
 
         $crawler = m::mock('Symfony\Component\DomCrawler\Crawler');
         $crawler->shouldReceive('fooBar')->andReturn('baz');
