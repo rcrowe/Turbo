@@ -27,7 +27,7 @@ class TurboServiceProvider extends ServiceProvider
 
         $this->app->after(function ($request, $response) {
             // Dont handle redirects
-            if (!$response->isRedirection()) {
+            if ($response->isRedirection()) {
                 return;
             }
 
