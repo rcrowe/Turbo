@@ -40,6 +40,7 @@ class TurboServiceProvider extends ServiceProvider
 
                     // Set new response content
                     $response->setContent($body);
+                    $response->headers->set('X-PJAX-URL', $request->getUri());
                 }
 
                 // Fire that we are in a pjax request
